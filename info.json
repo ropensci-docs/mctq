@@ -1,0 +1,12 @@
+{
+  "commit": {
+    "commit": "120b9f69ed8812d010d86de8f8cacd3ea392799d",
+    "author": "Daniel Vartanian <danvartan@gmail.com>",
+    "time": "2022-07-07 01:14:07",
+    "files": 3,
+    "merge": false,
+    "message": "Add 'fair-software.eu' badge to README.md\n"
+  },
+  "repo": "https://github.com/ropensci/mctq",
+  "pkg": "mctq"
+}
