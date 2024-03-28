@@ -1,0 +1,13 @@
+pandoc: 2.16.2
+pkgdown: 2.0.7
+pkgdown_sha: ~
+articles:
+  mctq: mctq.html
+  missing-sections: missing-sections.html
+  sjl-computation: sjl-computation.html
+  time-span-objects: time-span-objects.html
+last_built: 2024-03-28T05:54Z
+urls:
+  reference: https://docs.ropensci.org/mctq/reference
+  article: https://docs.ropensci.org/mctq/articles
+

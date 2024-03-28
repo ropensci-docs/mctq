@@ -1,0 +1,12 @@
+{
+  "commit": {
+    "commit": "79ac6c980a7ee88950924ef2c758816c7f13d138",
+    "author": "Daniel Vartanian <danvartan@gmail.com>",
+    "time": "2023-11-29 05:47:13",
+    "files": 5,
+    "merge": false,
+    "message": "Patch documentation\n"
+  },
+  "repo": "https://github.com/ropensci/mctq",
+  "pkg": "mctq"
+}
