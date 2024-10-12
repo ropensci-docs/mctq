@@ -1,0 +1,11 @@
+pandoc: 3.2.1
+pkgdown: 2.1.0
+pkgdown_sha: ~
+articles:
+  mctq: mctq.html
+  missing-sections: missing-sections.html
+  sjl-computation: sjl-computation.html
+last_built: 2024-10-12T23:13Z
+urls:
+  reference: https://docs.ropensci.org/mctq/reference
+  article: https://docs.ropensci.org/mctq/articles

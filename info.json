@@ -1,0 +1,12 @@
+{
+  "commit": {
+    "commit": "88729fe514a29a0f0bd7cc5aea298c8feab4b852",
+    "author": "Daniel Vartanian <danvartan@gmail.com>",
+    "time": "2024-10-12 22:28:47",
+    "files": 3,
+    "merge": false,
+    "message": "Change `README.md` rendering to Quarto\n"
+  },
+  "repo": "https://github.com/ropensci/mctq",
+  "pkg": "mctq"
+}
