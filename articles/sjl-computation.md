@@ -1,0 +1,255 @@
+# The social jetlag computation
+
+This article provides notes on different approaches to computing social
+jetlag (\\SJL\\) for the Munich ChronoType Questionnaire (MCTQ). It also
+explains how the `method` argument in the
+[`sjl_rel()`](https://docs.ropensci.org/mctq/reference/sjl.md),
+[`sjl()`](https://docs.ropensci.org/mctq/reference/sjl.md),
+[`sjl_sc_rel()`](https://docs.ropensci.org/mctq/reference/sjl_sc.md),
+and [`sjl_sc()`](https://docs.ropensci.org/mctq/reference/sjl_sc.md)
+functions works.
+
+It’s helpful to have the standard MCTQ questionnaire and the guidelines
+for standard MCTQ variable computation open while reading this article.
+This will enhance your understanding of the data objects discussed. You
+can download the MCTQ full standard version
+[here](https://www.thewep.org/documentations/mctq/item/english-mctq-full)
+and the guidelines for standard MCTQ variables
+[here](https://www.thewep.org/documentations/mctq/item/mctq-variables).
+
+## The two intervals problem
+
+According to Roenneberg et
+al. ([2012](https://doi.org/10.1016/j.cub.2012.03.038)), the relative
+social jetlag (\\SJL\_{ rel}\\), i.e., the discrepancy between social
+and biological time, must be computed as the difference between \\MSF\\
+(local time of mid-sleep on work-free days) and \\MSW\\ (local time of
+mid-sleep on workdays).
+
+\\SJL\_{rel} = MSF - MSW\\
+
+This simple equation seems trivial until you consider that it deals with
+two time values detached from a timeline. In other words, \\MSW\\ and
+\\MSF\\ represent two moments in different contexts (workdays and
+work-free days).
+
+If you dive into the MCTQ articles, you can see that this computation
+have two objectives:
+
+1.  Represent the distance between \\MSW\\ and \\MSF\\ (i.e., the
+    discrepancy).
+
+2.  Establish what value comes before or after the other, representing
+    that with a \\+/-\\ signal. That is, when \\MSW\\ comes before
+    \\MSF\\, \\SJL\_{rel}\\ must be positive, and when \\MSW\\ comes
+    after \\MSF\\, \\SJL\_{rel}\\ must be negative.
+
+3.  To represent the distance between \\MSW\\ and \\MSF\\ (i.e., the
+    discrepancy).
+
+4.  To establish what value comes before or after the other,
+    representing that with a \\+/-\\ signal. That is, when \\MSW\\ comes
+    before \\MSF\\, \\SJL\_{rel}\\ must be positive, and when \\MSW\\
+    comes after \\MSF\\, \\SJL\_{rel}\\ must be negative.
+
+You can find the rationale about the \\SJL\_{rel}\\ signal in Roenneberg
+et al. ([2019](https://doi.org/10.3390/biology8030054)) (see item “3.2
+Social Jetlag Computation”).
+
+Most people have some trouble understanding this. To illustrate what we
+mean, let’s visualize a timeline overlapping an \\MSW\\ and \\MSF\\
+value:
+
+                 day 1                        day 2
+        MSF                MSW       MSF                MSW
+       05:00              21:00     05:00              21:00
+    -----|------------------|---------|------------------|----->
+                  16h           8h             16h
+              longer int.  shorter int.    longer int.
+
+Note that, while doing the representation above, we’re dealing with the
+assumption that \\MSW\\ and \\MSF\\ can be represented in a two-day
+timeline since people don’t usually sleep more than 24 hours (basic
+assumption).
+
+As you can see, by overlapping two time values in a two-day timeline, we
+need to make a choice of what interval to use. For most people \\MSF\\
+and \\MSW\\ are close to each other, so, usually, we are looking for the
+shorter interval between the two. But, in some extreme cases, usually
+when dealing with shift workers, \\MSW\\ and \\MSF\\ distance can
+surpass 12 hours, making the longer interval the correct answer.
+
+To obtain the \\SJL\_{rel}\\ signal we must check the start value of the
+interval. If the interval between \\MSW\\ and \\MSF\\ starts with
+\\MSW\\, that means that \\MSW\\ comes before \\MSF\\, hence, the signal
+must be positive. Else, if the interval between \\MSW\\ and \\MSF\\
+starts with \\MSF\\, that means that \\MSW\\ comes after \\MSF\\, hence,
+the signal must be negative.
+
+- Example 1: when \\MSF - MSW\\ makes a **positive** \\SJL\_{rel}\\
+
+&nbsp;
+
+                 day 1                        day 2
+                           MSW       MSF                
+                          21:00     05:00
+    ------------------------|---------|------------------------>
+
+- Example 2: when \\MSF - MSW\\ makes a **negative** \\SJL\_{rel}\\
+
+&nbsp;
+
+                 day 1                        day 2
+                           MSF       MSW                
+                          21:00     05:00
+    ------------------------|---------|------------------------>
+
+We call this the **two intervals problem**. It represents an unsolvable
+mathematical scenario, if you deprive it of the respondent context. That
+can generate minor errors when computing \\SJL\\, especially if you’re
+dealing with large datasets.
+
+## Methods for computing \\SJL\\
+
+the [`sjl_rel()`](https://docs.ropensci.org/mctq/reference/sjl.md),
+[`sjl()`](https://docs.ropensci.org/mctq/reference/sjl.md),
+[`sjl_sc_rel()`](https://docs.ropensci.org/mctq/reference/sjl_sc.md),
+and [`sjl_sc()`](https://docs.ropensci.org/mctq/reference/sjl_sc.md)
+functions provides an argument called `method` that allows you to choose
+three different methods to deal with the two intervals problem. Here’s
+how they work.
+
+The [`sjl()`](https://docs.ropensci.org/mctq/reference/sjl.md) function
+will be used in the examples, but the same logic apply to the other
+`sjl` functions.
+
+### `method = "difference"`
+
+By using `method = "difference"`,
+[`sjl()`](https://docs.ropensci.org/mctq/reference/sjl.md) will do the
+exact computation proposed by the MCTQ authors, i.e., \\SJL\\ will be
+computed as the linear difference between \\MSF\\ and \\MSW\\.
+
+Let’s see some examples using this method.
+
+- Example 3: using the `"difference"` method
+
+\\MSW = \text{04:00}\\
+
+\\MSF = \text{06:00}\\
+
+\\\text{Real difference: + 02:00}\\
+
+\\MSF - MSW = \text{06:00} - \text{04:00} = \text{+ 02:00}\\ (**right**)
+
+- Example 4: using the `"difference"` method
+
+\\MSW = \text{23:00}\\
+
+\\MSF = \text{03:00}\\
+
+\\\text{Real difference: + 04:00}\\
+
+\\MSF - MSW = \text{03:00} - \text{23:00} = \text{- 20:00}\\ (**wrong**)
+
+As you can see with the second example, the `"difference"` method uses a
+linear time frame approach, creating problems regarding the circularity
+of time.
+
+### `method = "shorter"` (default method)
+
+By using `method = "shorter"`,
+[`sjl()`](https://docs.ropensci.org/mctq/reference/sjl.md) uses the
+shorter interval between \\MSW\\ and \\MSF\\.
+
+This is the most reliable method we found to compute \\SJL\\,
+considering the context of the MCTQ data. However, it comes with a
+limitation: when \\MSW\\ and \\MSF\\ values distance themselves by more
+than 12 hours,
+[`sjl()`](https://docs.ropensci.org/mctq/reference/sjl.md) can return a
+wrong output. From our experience with MCTQ data, a \\SJL\\ greater than
+12 hours is highly improbable.
+
+Let’s see some examples using this method.
+
+- Example 5: using the `"shorter"` method
+
+\\MSW = \text{04:00}\\
+
+\\MSF = \text{06:00}\\
+
+\\\text{Real difference: + 02:00}\\
+
+                 day 1                        day 2
+        MSF                MSW       MSF                MSW
+       06:00              04:00     06:00              04:00
+    -----|------------------|---------|------------------|----->
+                 22h            2h             22h
+             longer int.   shorter int.    longer int.
+
+By using the shorter interval, \\MSW\\ comes before \\MSF\\, so
+\\SJL\_{rel}\\ must be equal to \\\text{+ 02:00}\\ (**right**).
+
+- Example 6: using the `"shorter"` method
+
+\\MSW = \text{23:00}\\
+
+\\MSF = \text{03:00}\\
+
+\\\text{Real difference: + 04:00}\\
+
+                 day 1                        day 2
+        MSF                MSW       MSF                MSW
+       03:00              23:00     03:00              23:00
+    -----|------------------|---------|------------------|----->
+                 20h            4h             20h
+             longer int.   shorter int.    longer int.
+
+By using the shorter interval, \\MSW\\ comes before \\MSF\\, so
+\\SJL\_{rel}\\ must be equal to \\\text{+ 04:00}\\ (**right**).
+
+- Example 7: when the `"shorter"` method fails
+
+\\MSW = \text{12:00}\\
+
+\\MSF = \text{23:00}\\
+
+\\\text{Real difference: - 13:00}\\
+
+                 day 1                        day 2
+        MSW                     MSF                      MSW
+       12:00                   23:00                    12:00
+    -----|-----------------------|------------------------|----->
+                   11h                       13h
+               shorter int.              longer int.
+
+By using the shorter interval, \\MSW\\ comes before \\MSF\\, so
+\\SJL\_{rel}\\ must be equal to \\\text{+ 11:00}\\ (**wrong**).
+
+You can see example 7 in the `shift_mctq` dataset provided by the `mctq`
+package (ID 39, on and after night shifts). That’s the only
+MCTQ\\^{Shift}\\ case in `shift_mctq` where we think that the
+`"shorter"` method would fail.
+
+### `method = "longer"`
+
+By using `method = "longer"`,
+[`sjl()`](https://docs.ropensci.org/mctq/reference/sjl.md) uses the
+longer interval between \\MSW\\ and \\MSF\\. It’s just the opposite of
+the `"shorter"` method showed above.
+
+## So, what method should I use?
+
+We recommend that you always use the `"shorter"` method when computing
+\\SJL\_{rel}\\ or \\SJL\\ (the default
+[`sjl()`](https://docs.ropensci.org/mctq/reference/sjl.md) method).
+
+In our tests, the `"shorter"` method demonstrated to be almost
+fail-safe. You just need to worry about the \\SJL\\ computation if you
+are dealing with shift workers.
+
+When dealing with a large MCTQ\\^{Shift}\\ dataset, it will be very
+difficult to identify \\SJL\\ errors, unless you look case by case and
+check the results with your respondents. This is usually not a viable
+option. We recommend that you mention which method you use to compute
+\\SJL\\ and add it as a possible limitation of your results.

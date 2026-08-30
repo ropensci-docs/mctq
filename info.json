@@ -1,0 +1,13 @@
+{
+  "commit": {
+    "commit": "f871eb3a79e3a118d65959b213e119b1873f4d7d",
+    "author": "Daniel Vartanian <danvartan@gmail.com>",
+    "time": "2025-01-04T07:52:31Z",
+    "files": 3,
+    "merge": false,
+    "message": "Fix `README.md` badges\n"
+  },
+  "repo": "https://github.com/ropensci/mctq",
+  "pkg": "mctq",
+  "time": "2026-08-30T07:37:59Z"
+}
