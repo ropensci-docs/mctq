@@ -1,0 +1,208 @@
+# Compute MCTQ local time of sleep onset
+
+**\[maturing\]**
+
+`so()` computes the **local time of sleep onset** for standard and shift
+versions of the Munich ChronoType Questionnaire (MCTQ).
+
+Note that this value is collected directly from the questionnaire if
+you're using the \\\mu\\MCTQ.
+
+## Usage
+
+``` r
+so(sprep, slat)
+```
+
+## Arguments
+
+- sprep:
+
+  An [`hms`](https://hms.tidyverse.org/reference/hms.html) object
+  corresponding to the **local time of preparing to sleep** from a
+  standard or shift version of the MCTQ questionnaire.
+
+- slat:
+
+  A
+  [`Duration`](https://lubridate.tidyverse.org/reference/duration.html)
+  object corresponding to the **sleep latency or time to fall asleep
+  after preparing to sleep** from a standard or shift version of the
+  MCTQ questionnaire.
+
+## Value
+
+An [`hms`](https://hms.tidyverse.org/reference/hms.html) object
+corresponding to the vectorized sum of `sprep` and `slat` in a circular
+time frame of 24 hours.
+
+## Details
+
+**Standard MCTQ** functions were created following the guidelines in
+Roenneberg, Wirz-Justice, & Merrow (2003), Roenneberg, Allebrandt,
+Merrow, & Vetter (2012), and from The Worldwide Experimental Platform
+(theWeP, n.d.).
+
+**\\\mu\\MCTQ** functions were created following the guidelines in
+Ghotbi et al. (2020), in addition to the guidelines used for the
+standard MCTQ.
+
+**MCTQ\\^{Shift}\\** functions were created following the guidelines in
+Juda, Vetter, & Roenneberg (2013), in addition to the guidelines used
+for the standard MCTQ.
+
+See the References section to learn more.
+
+### Class requirements
+
+The `mctq` package works with a set of object classes specially created
+to hold time values. These classes can be found in the
+[lubridate](https://lubridate.tidyverse.org/reference/lubridate-package.html)
+and [hms](https://hms.tidyverse.org/reference/hms-package.html)
+packages. Please refer to those package documentations to learn more
+about them.
+
+### Rounding and fractional time
+
+Some operations may produce an output with fractional time (e.g.,
+`"19538.3828571429s (~5.43 hours)"`, `01:15:44.505`). If you want, you
+can round it with `mctq:::round_time()`.
+
+Our recommendation is to avoid rounding, but, if you do, make sure that
+you only round your values after all computations are done. That way you
+avoid [round-off errors](https://en.wikipedia.org/wiki/Round-off_error).
+
+## Guidelines
+
+Roenneberg, Allebrandt, Merrow, & Vetter (2012), Juda, Vetter, &
+Roenneberg (2013), and The Worldwide Experimental Platform (n.d.)
+guidelines for `so()` (\\SO\\) computation are as follows.
+
+### Notes
+
+- This computation must be applied to each section of the questionnaire.
+
+- If you are visualizing this documentation in plain text, you may have
+  some trouble understanding the equations. You can see this
+  documentation on the package
+  [website](https://docs.ropensci.org/mctq/reference/).
+
+### For standard and micro versions of the MCTQ
+
+\$\$SO\_{W/F} = SPrep\_{W/F} + SLat\_{W/F}\$\$
+
+Where:
+
+- \\SO\_{W/F}\\ = Local time of sleep onset on work **or** work-free
+  days.
+
+- \\SPrep\_{W/F}\\ = Local time of preparing to sleep on work **or**
+  work-free days ("I actually get ready to fall asleep at \_\_\_
+  o'clock").
+
+- \\SLat\_{W/F}\\ = Sleep latency or time to fall asleep after preparing
+  to sleep on work **or** work-free days ("I need \_\_\_ min to fall
+  asleep").
+
+**\*** \\W\\ = Workdays; \\F\\ = Work-free days.
+
+### For the shift version of the MCTQ
+
+\$\$SO\_{W/F}^{M/E/N} = SPrep\_{W/F}^{M/E/N} + SLat\_{W/F}^{M/E/N}\$\$
+
+Where:
+
+- \\SO\_{W/F}^{M/E/N}\\ = Local time of sleep onset between two days in
+  a particular shift **or** between two free days after a particular
+  shift.
+
+- \\SPrep\_{W/F}^{M/E/N}\\ = Local time of preparing to sleep between
+  two days in a particular shift **or** between two free days after a
+  particular shift ("I actually get ready to fall asleep at \_\_\_
+  o'clock").
+
+- \\SLat\_{W/F}^{M/E/N}\\ = Sleep latency or time to fall asleep after
+  preparing to sleep between two days in a particular shift **or**
+  between two free days after a particular shift ("I need \_\_\_ min to
+  fall asleep").
+
+**\*** \\W\\ = Workdays; \\F\\ = Work-free days, \\M\\ = Morning shift;
+\\E\\ = Evening shift; \\N\\ = Night shift.
+
+## References
+
+Ghotbi, N., Pilz, L. K., Winnebeck, E. C., Vetter, C., Zerbini, G.,
+Lenssen, D., Frighetto, G., Salamanca, M., Costa, R., Montagnese, S., &
+Roenneberg, T. (2020). The \\\mu\\MCTQ: an ultra-short version of the
+Munich ChronoType Questionnaire. *Journal of Biological Rhythms*,
+*35*(1), 98-110.
+[doi:10.1177/0748730419886986](https://doi.org/10.1177/0748730419886986)
+
+Juda, M., Vetter, C., & Roenneberg, T. (2013). The Munich ChronoType
+Questionnaire for shift-workers (MCTQ\\^{Shift}\\). *Journal of
+Biological Rhythms*, *28*(2), 130-140.
+[doi:10.1177/0748730412475041](https://doi.org/10.1177/0748730412475041)
+
+Roenneberg T., Allebrandt K. V., Merrow M., & Vetter C. (2012). Social
+jetlag and obesity. *Current Biology*, *22*(10), 939-43.
+[doi:10.1016/j.cub.2012.03.038](https://doi.org/10.1016/j.cub.2012.03.038)
+
+Roenneberg, T., Wirz-Justice, A., & Merrow, M. (2003). Life between
+clocks: daily temporal patterns of human chronotypes. *Journal of
+Biological Rhythms*, *18*(1), 80-90.
+[doi:10.1177/0748730402239679](https://doi.org/10.1177/0748730402239679)
+
+The Worldwide Experimental Platform (n.d.). MCTQ.
+<https://www.thewep.org/documentations/mctq/>
+
+## See also
+
+Other MCTQ functions:
+[`fd()`](https://docs.ropensci.org/mctq/reference/fd.md),
+[`gu()`](https://docs.ropensci.org/mctq/reference/gu.md),
+[`le_week()`](https://docs.ropensci.org/mctq/reference/le_week.md),
+[`msf_sc()`](https://docs.ropensci.org/mctq/reference/msf_sc.md),
+[`msl()`](https://docs.ropensci.org/mctq/reference/msl.md),
+[`napd()`](https://docs.ropensci.org/mctq/reference/napd.md),
+[`sd24()`](https://docs.ropensci.org/mctq/reference/sd24.md),
+[`sd_overall()`](https://docs.ropensci.org/mctq/reference/sd_overall.md),
+[`sd_week()`](https://docs.ropensci.org/mctq/reference/sd_week.md),
+[`sdu()`](https://docs.ropensci.org/mctq/reference/sdu.md),
+[`sjl()`](https://docs.ropensci.org/mctq/reference/sjl.md),
+[`sjl_sc()`](https://docs.ropensci.org/mctq/reference/sjl_sc.md),
+[`sjl_weighted()`](https://docs.ropensci.org/mctq/reference/sjl_weighted.md),
+[`tbt()`](https://docs.ropensci.org/mctq/reference/tbt.md)
+
+## Examples
+
+``` r
+## Scalar example
+
+sprep <- hms::parse_hm("22:00")
+slat <- lubridate::dminutes(15)
+so(sprep, slat)
+#> 22:15:00
+#> 22:15:00 # Expected
+
+sprep <- hms::parse_hm("23:30")
+slat <- lubridate::dminutes(45)
+so(sprep, slat)
+#> 00:15:00
+#> 00:15:00 # Expected
+
+sprep <- hms::parse_hm("20:45")
+slat <- lubridate::as.duration(NA)
+so(sprep, slat)
+#> NA
+#> NA # Expected
+
+## Vector example
+
+sprep <- c(hms::parse_hm("21:30"), hms::parse_hm("22:15"))
+slat <- c(lubridate::dminutes(45), lubridate::dminutes(5))
+so(sprep, slat)
+#> 22:15:00
+#> 22:20:00
+#> 22:15:00 # Expected
+#> 22:20:00 # Expected
+```
